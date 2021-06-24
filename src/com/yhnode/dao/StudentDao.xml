@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhnode.dao.StudentDao">
+    <select id="getByid" resultType="com.yhnode.domain.Student">
+        select name,id,age from tbl_student where id=#{id}
+    </select>
+
+    <!--
+        如果返回的多条记录，resultType应该写为集合的泛型
+    -->
+    <select id="selectAll" resultType="com.yhnode.domain.Student">
+        select name,id,age from tbl_student
+    </select>
+
+    <!--插入语句-->
+    <!--
+        注意：
+            在未来实际项目开发中
+            所有的标签都必须要写id属性
+            <select>标签parameterType属性可以省略不写
+                resultType属性必须得写
+            对于<insert><update><delete>这三个标签
+            通常我们只写id属性，其他属性一律不写
+    -->
+    <insert id="insertStudent">
+        insert into tbl_student values (#{id},#{name},#{age})
+    </insert>
+
+    <update id="updateStudent">
+        update tbl_student set name = #{name},age = #{age} where id=#{id}
+    </update>
+
+    <delete id="deleteStudent">
+        delete from tbl_student where id=#{id}
+    </delete>
+
+    <select id="selectOne" resultType="com.yhnode.domain.Student">
+        select id,name,age from tbl_student where name=#{name}
+    </select>
+    <!--多个参数的第一种方法，使用@param-->
+    <select id="selectMulitParam" resultType="com.yhnode.domain.Student">
+        select id,name,age from tbl_student where name=#{myname} or age=#{myage}
+    </select>
+
+    <!--
+        多个参数的第二种方法，使用对象传参，简化写法，javatype和jdbctype的类型不用写，mybatis自动获取
+    -->
+    <select id="selectMulitParamTwo" resultType="com.yhnode.domain.Student">
+        select id,name,age from tbl_student where name=#{name} or age=#{age}
+    </select>
+
+    <!--
+        使用map传参
+    -->
+    <select id="selectMap" resultType="com.yhnode.domain.Student">
+        select id,name,age from tbl_student where name=#{name} or age=#{age}
+    </select>
+
+    <select id="selectMulitStudent" resultType="map">
+        select s.name sname,c.name cname from tbl_student s join tbl_classroom c on s.classroomId = c.id
+    </select>
+
+    <!--使用vo多表查询-->
+    <select id="selectVo" resultType="com.yhnode.vo.StudentAndClassroomVo">
+        select
+        s.id sid,s.name sname,s.address saddress,s.age age,c.name cname,c.id cid
+        from tbl_student s
+        join tbl_classroom c
+        on s.classroomid = c.id
+    </select>
+
+    <select id="selectVo1" resultType="com.yhnode.vo.StudentAndClassroomVo">
+        select
+            s.id sid,s.name sname,s.address saddress,s.age age,c.name cname,c.id cid
+        from tbl_student s
+                 join tbl_classroom c
+                      on s.classroomid = c.id
+        where s.name like '%' #{name} '%'
+    </select>
+</mapper>

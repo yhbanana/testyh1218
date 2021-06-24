@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="db.properties"/>
+    <!--
+        设置与数据库交互的环境
+        例如可以在此处配置二级缓存，配置查询延迟加载策略等等。。。
+            配置的目的是为了更加有效的查询表中的记录
+        在实际项目开发中，settings对于查询的优化，得到的效果不明显
+
+        对于海量级别的数据，使用settings配置优化，起不到任何的效果
+        对于数据量少的项目，对于查询的效率要求的比较低，也没有必要时用settings配置
+
+        如果遇到了海量级别的数据，我们如何去提高查询的效率？
+
+        基础操作
+            对于常用的查询条件的字段，设置索引
+
+        高级操作
+            使用nosql数据库，redis
+
+        专业操作
+            搜索引擎：Elasticsearch与solr
+            针对于电商行业
+    -->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!--配置 mybatis 环境-->
+
+    <environments default="mysql">
+        <!--id:数据源的名称-->
+        <environment id="mysql">
+            <!--配置事务类型：使用 JDBC 事务（使用 Connection 的提交和回滚）-->
+            <transactionManager type="JDBC"/>
+            <!--数据源 dataSource：创建数据库 Connection 对象
+         type: POOLED 使用数据库的连接池 
+         -->
+            <dataSource type="POOLED">
+                <!--连接数据库的四个要素-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!--告诉 mybatis 要执行的 sql 语句的位置-->
+        <mapper resource="com/yhnode/dao/StudentDao.xml"/>
+    </mappers>
+</configuration>
